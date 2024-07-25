@@ -18,10 +18,16 @@ database = 'sqlite:///' + os.path.join(base_dir, 'data.sqlite')
 app.config['SQLALCHEMY_DATABASE_URI'] = database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# ★db変数を使用してSQLAlchemyを操作できる
+# データベースの設定
 db = SQLAlchemy(app)
-# ★「flask_migrate」を使用できる様にする
-Migrate(app, db)
+migrate = Migrate(app, db)
+
+# モデルのインポート（循環インポートを避けるため、ここで行う）
+from models import init_db
+
+# データベースの初期化
+with app.app_context():
+    init_db()
 
 # ==================================================
 # 実行
