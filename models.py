@@ -1,4 +1,4 @@
-from .app import db
+from app import db
 from datetime import datetime
 
 #==================================================
@@ -53,5 +53,22 @@ class Comment(db.Model):
 class Category(db.Model):
     __tablename__ = 'categories'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
+
+    @staticmethod
+    def insert_categories():
+        categories = [
+            '人文社会学部', '国際地域創造学部', '教育学部', '理学部', '医学部',
+            '工学部', '農学部', '共通教育科目'
+        ]
+        for cat in categories:
+            category = Category.query.filter_by(name=cat).first()
+            if category is None:
+                new_category = Category(name=cat)
+                db.session.add(new_category)
+        db.session.commit()
+
+def init_db():
+    db.create_all()
+    Category.insert_categories()
