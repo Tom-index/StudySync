@@ -1,15 +1,43 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, SubmitField
-from wtforms.validators import DataRequired, Email, Length, EqualTo
+from wtforms import StringField, IntegerField, PasswordField, SubmitField, TextAreaField, FileField, SelectField
+from wtforms.validators import DataRequired, Email, Length, Optional
+from flask_wtf.file import FileRequired, FileAllowed
+from models import Category
 
 #==================================================
 # フォーム
 #==================================================
+
+#新規作成
 class RegistrationForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email(), Length(max=255)])
-    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=20)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(min=6,max=255)])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    faculty = StringField('Faculty', validators=[DataRequired(), Length(max=20)])
-    year = IntegerField('Year', validators=[DataRequired()])
-    submit = SubmitField('Sign Up')
+    username = StringField('ユーザー名', validators=[DataRequired(), Length(min=3, max=20)])
+    email = StringField('メールアドレス', validators=[DataRequired(), Email(), Length(max=255)])
+    password = PasswordField('パスワード', validators=[DataRequired(), Length(min=6,max=255)])
+    faculty = StringField('学部', validators=[Optional(),Length(max=20)])
+    year = IntegerField('年次', validators=[Optional()])
+    submit = SubmitField('新規作成')
+
+#ログイン
+class LoginForm(FlaskForm):
+    email = StringField('メールアドレス', validators=[DataRequired(), Email(), Length(max=255)])
+    password = PasswordField('パスワード', validators=[DataRequired(), Length(min=6,max=255)])
+    submit = SubmitField('ログイン')
+
+#投稿
+class PostForm(FlaskForm):
+    image = FileField('ノート画像', validators=[
+        FileRequired(),
+        FileAllowed(['jpg', 'png', 'jpeg'], '画像ファイルのみ')
+    ])
+    message = TextAreaField('メッセージ', validators=[Optional(), Length(max=100)])
+    category = SelectField('カテゴリ', coerce=int, validators=[DataRequired()])
+    submit = SubmitField('投稿')
+
+    def __init__(self, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.category.choices = [(c.id, c.name) for c in Category.query.order_by('name')]
+
+#コメント
+class CommentForm(FlaskForm):
+    content = TextAreaField('コメント', validators=[DataRequired(), Length(max=200)])
+    submit = SubmitField('送信')

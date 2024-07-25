@@ -15,6 +15,7 @@ instance/
 # SQLite database files
 *.db
 *.sqlite
+migrations/
 
 # Log files
 *.log
