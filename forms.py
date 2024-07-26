@@ -25,17 +25,12 @@ class LoginForm(FlaskForm):
 
 #投稿
 class PostForm(FlaskForm):
-    image = FileField('ノート画像', validators=[
-        FileRequired(),
-        FileAllowed(['jpg', 'png', 'jpeg'], '画像ファイルのみ')
+    message = TextAreaField('内容')
+    image = FileField('画像', validators=[
+        DataRequired(), 
+        FileAllowed(['jpg', 'png', 'jpeg'], '画像ファイル（"jpg","png","jpeg"）のみ！')
     ])
-    message = TextAreaField('メッセージ', validators=[Optional(), Length(max=100)])
     category = SelectField('カテゴリ', coerce=int, validators=[DataRequired()])
-    submit = SubmitField('投稿')
-
-    def __init__(self, *args, **kwargs):
-        super(PostForm, self).__init__(*args, **kwargs)
-        self.category.choices = [(c.id, c.name) for c in Category.query.order_by('name')]
 
 #コメント
 class CommentForm(FlaskForm):
