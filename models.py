@@ -1,10 +1,11 @@
 from app import db
 from datetime import datetime
+from flask_login import UserMixin
 
 #==================================================
 # モデル
 #==================================================
-class User(db.Model):
+class User(UserMixin, db.Model):
     # テーブル名
     __tablename__ = 'users'
 
@@ -19,13 +20,13 @@ class Post(db.Model):
     __tablename__ = 'posts'
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     message = db.Column(db.Text)
     image_path = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    user = db.relationship('User', backref=db.backref('posts', lazy=True))
+    # user = db.relationship('User', backref=db.backref('posts', lazy=True))
     category = db.relationship('Category', backref=db.backref('posts', lazy=True))
 
 class Like(db.Model):
