@@ -10,9 +10,12 @@ import os
 # ==================================================
 # ルーティング
 # ==================================================
+@app.route('/')
+def index():
+    return redirect(url_for('login'))
 
 # ホーム画面(投稿一覧画面)
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/home', methods=['GET', 'POST'])
 # @login_required ログイン機能実装後（ログインしていないとlogin.htmlに遷移）
 def home():
     form = PostForm()
