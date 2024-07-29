@@ -3,40 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../static/css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <title>新規登録</title>
+    <title>アカウント作成</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="register-container">
-        <h2>アカウント登録</h2>
-        <form method="POST" action="{{ url_for('register') }}">
-            {{ form.hidden_tag() }}
-            <div class="form-group">
-                {{ form.username.label }}
-                {{ form.username(class="form-control") }}
+    <div class="container">
+        <h2>StudySync</h2>
+        <form action="/submit" method="POST">
+
+            <div class="field">
+            <label for="username">ユーザー名　</label>
+            <div class="box">
+                <p>必須</p>
+                </div>
             </div>
-            <div class="form-group">
-                {{ form.email.label }}
-                {{ form.email(class="form-control") }}
+            <input type="text" id="username" name="username" required>
+            
+            <div class="field">
+            <label for="email">メールアドレス　</label>
+            <div class="box">
+                <p>必須</p>
+                </div>
             </div>
-            <div class="form-group">
-                {{ form.password.label }}
-                {{ form.password(class="form-control") }}
+            <input type="email" id="email" name="email" required>
+
+            <div class="field">
+            <label for="password">パスワード　</label>
+            <div class="box">
+                <p>必須</p>
+                </div>
             </div>
-            <div class="form-group">
-                {{ form.faculty.label }}
-                {{ form.faculty(class="form-control") }}
+            <input type="password" id="password" name="password" required>
+
+            <div class="horizontal-group">
+                <div class="form-group">
+                    <div class="field">
+                    <label for="faculty">学部　</label>
+                    <div class="box1">
+                        <p>任意</p>
+                        </div>
+                        </div>
+                    <input type="text" id="faculty" name="faculty" required>
+                </div>
+                
+                <div class="form-group">
+                    <div class="field">
+                    <label for="year">年次　</label>
+                    <div class="box1">
+                        <p>任意</p>
+                        </div>
+                        </div>
+                    <select id="year" name="year" required>
+                        <option value="" disabled selected>選択してください</option>
+                        <option value="1">1年</option>
+                        <option value="2">2年</option>
+                        <option value="3">3年</option>
+                        <option value="4">4年</option>
+                    </select>
+                </div>
             </div>
-            <div class="form-group">
-                {{ form.year.label }}
-                {{ form.year(class="form-control") }}
-            </div>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
+
+            <button type="submit">新規作成</button>
         </form>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 </html>
