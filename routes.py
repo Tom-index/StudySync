@@ -49,6 +49,7 @@ def home():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
+    form.year.choices = [(None, ''),('1',1), ('2',2),('3',3),('4',4)]
     if form.validate_on_submit():
         user = User(
             username=form.username.data,

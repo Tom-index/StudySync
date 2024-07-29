@@ -14,7 +14,7 @@ class RegistrationForm(FlaskForm):
     email = StringField('メールアドレス', validators=[DataRequired(), Email(), Length(max=255)])
     password = PasswordField('パスワード', validators=[DataRequired(), Length(min=6,max=255)])
     faculty = StringField('学部', validators=[Optional(),Length(max=20)])
-    year = IntegerField('年次', validators=[Optional()])
+    year = SelectField('年次', validators=[Optional()])
     submit = SubmitField('新規作成')
 
 #ログイン
