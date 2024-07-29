@@ -16,7 +16,8 @@ import os
 # @login_required ログイン機能実装後（ログインしていないとlogin.htmlに遷移）
 def home():
     form = PostForm()
-    form.category.choices = [(c.id, c.name) for c in Category.query.all()]
+    categories = Category.query.all()
+    form.category.choices = [(c.id, c.name) for c in categories]
     
     if form.validate_on_submit():
         message = form.message.data
@@ -42,7 +43,7 @@ def home():
         return redirect(url_for('home'))
     
     posts = Post.query.order_by(Post.created_at.desc()).all()
-    return render_template('home.html', form=form, posts=posts)
+    return render_template('home.html', form=form, posts=posts, categories=categories)
 
 # ユーザー登録
 @app.route('/register', methods=['GET', 'POST'])
