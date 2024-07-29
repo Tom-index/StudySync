@@ -93,16 +93,6 @@ body {
     margin-top: 10px;
 }
 
-.user-info {
-    margin-bottom: 10px;
-}
-
-.username {
-    font-weight: bold;
-    font-size: 16px;
-    color: #1E90FF;
-}
-
 .faculty-year {
     font-size: 14px;
     color: #657786;
@@ -118,6 +108,45 @@ body {
     font-size: 14px;
     color: #657786;
     margin-top: 10px;
+}
+
+/* 投稿フッター */
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+.post-actions {
+    display: flex;
+    gap: 10px;
+}
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.comment-btn i {
+    color: #3498db;
+}
+.post-info {
+    font-size: 0.9em;
+    color: #777;
+}
+.username {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+.comment-list {
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 /* フォームの全体的なスタイル */

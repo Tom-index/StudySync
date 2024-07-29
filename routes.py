@@ -1,11 +1,11 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from app import app, db
 from models import User, Post, Like, Comment, Category
 from forms import RegistrationForm, LoginForm, PostForm, CommentForm
-from sqlalchemy import desc
 import os
+
 
 # ==================================================
 # ルーティング
@@ -13,9 +13,10 @@ import os
 
 # ホーム画面(投稿一覧画面)
 @app.route('/', methods=['GET', 'POST'])
-# @login_required ログイン機能実装後（ログインしていないとlogin.htmlに遷移）
+@login_required
 def home():
     form = PostForm()
+    comment_form = CommentForm()
     categories = Category.query.all()
     form.category.choices = [(c.id, c.name) for c in categories]
     
@@ -34,8 +35,7 @@ def home():
             image_path = os.path.join('uploads', filename)
             image.save(os.path.join(image_folder, filename))
 
-        #ログイン実装後 -> user_id=current_user.id
-        post = Post(message=message, image_path=f'uploads/{filename}', category_id=category_id)
+        post = Post(message=message, image_path=f'uploads/{filename}', category_id=category_id, user_id=current_user.id)
         
         db.session.add(post)
         db.session.commit()
@@ -43,7 +43,27 @@ def home():
         return redirect(url_for('home'))
     
     posts = Post.query.order_by(Post.created_at.desc()).all()
-    return render_template('home.html', form=form, posts=posts, categories=categories)
+    return render_template('home.html', form=form, comment_form=comment_form, posts=posts, categories=categories, current_user=current_user)
+
+# コメント追加
+@app.route('/comment/<int:post_id>', methods=['POST'])
+@login_required
+def add_comment(post_id):
+    post = Post.query.get_or_404(post_id)
+    text = request.form.get('text')
+    if text:
+        comment = Comment(text=text, user_id=current_user.id, post_id=post_id)
+        db.session.add(comment)
+        db.session.commit()
+        return jsonify({'status': 'success', 'comment': {'text': comment.text, 'username': current_user.username}})
+    return jsonify({'status': 'error', 'message': 'コメントを入力してください'})
+
+# コメント取得
+@app.route('/comments/<int:post_id>', methods=['GET'])
+def get_comments(post_id):
+    comments = Comment.query.filter_by(post_id=post_id).all()
+    comments_data = [{'text': comment.text, 'username': comment.user.username} for comment in comments]
+    return jsonify({'status': 'success', 'comments': comments_data})
 
 # ユーザー登録
 @app.route('/register', methods=['GET', 'POST'])
@@ -62,6 +82,7 @@ def register():
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
+
 
 # ログイン
 @app.route('/login', methods=['GET', 'POST'])
