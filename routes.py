@@ -45,6 +45,19 @@ def home():
     posts = Post.query.order_by(Post.created_at.desc()).all()
     return render_template('home.html', form=form, comment_form=comment_form, posts=posts, categories=categories, current_user=current_user)
 
+# 投稿削除
+@app.route('/delete_post/<int:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get(post_id)
+    if post:
+        comments = Comment.query.filter_by(post_id=post_id).all()
+        for comment in comments:
+            db.session.delete(comment)
+        db.session.delete(post)
+        db.session.commit()
+    return redirect(url_for('home'))
+
 # コメント追加
 @app.route('/comment/<int:post_id>', methods=['POST'])
 @login_required
