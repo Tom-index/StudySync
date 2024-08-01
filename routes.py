@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db
 from models import User, Post, Like, Comment, Category
 from forms import RegistrationForm, LoginForm, PostForm, CommentForm
@@ -87,7 +88,7 @@ def register():
         user = User(
             username=form.username.data,
             email=form.email.data,
-            password_hash=form.password.data,
+            password_hash=generate_password_hash(form.password.data),
             faculty=form.faculty.data,
             year=form.year.data
         )
@@ -103,7 +104,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and user.password_hash == form.password.data:
+        if user and check_password_hash(user.password_hash, form.password.data):
             login_user(user)
             return redirect(url_for('home'))
     return render_template('login.html', form=form)
