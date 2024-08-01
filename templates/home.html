@@ -44,7 +44,7 @@
                     <div class="username">
                         <i class="fas fa-user-circle me-2"></i>{{ post.user.username }}
                     </div>
-                    {% if current_user.id == post.user.id %}
+                    {% if current_user.id == post.user.id or current_user.is_admin %}
                     <div class="delete-btn">
                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal{{ post.id }}">削除</button>
                     </div>

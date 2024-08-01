@@ -15,6 +15,8 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(20), nullable=False)
     faculty = db.Column(db.String(20))
     year = db.Column(db.Integer)
+    is_admin = db.Column(db.Boolean, default=False)  # 管理者フラグを追加
+
 
 class Post(db.Model):
     __tablename__ = 'posts'
@@ -73,3 +75,9 @@ class Category(db.Model):
 def init_db():
     db.create_all()
     Category.insert_categories()
+    admin_email = 'admin@example.com'
+    admin = User.query.filter_by(email=admin_email).first()
+    if not admin:
+        admin = User(email=admin_email, password_hash='password', username='Admin', is_admin=True)
+        db.session.add(admin)
+    db.session.commit()

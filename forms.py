@@ -25,7 +25,7 @@ class LoginForm(FlaskForm):
 
 #投稿
 class PostForm(FlaskForm):
-    message = TextAreaField('内容')
+    message = TextAreaField('内容', validators=[Length(max=50)])
     image = FileField('画像', validators=[
         DataRequired(), 
         FileAllowed(['jpg', 'png', 'jpeg'], '画像ファイル（"jpg","png","jpeg"）のみ！')
@@ -34,5 +34,5 @@ class PostForm(FlaskForm):
 
 #コメント
 class CommentForm(FlaskForm):
-    content = TextAreaField('コメント', validators=[DataRequired(), Length(max=200)])
+    content = TextAreaField('コメント', validators=[DataRequired(), Length(max=50)])
     submit = SubmitField('送信')
